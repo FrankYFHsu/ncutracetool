@@ -2,7 +2,7 @@ package tw.edu.ncu.ce.nclab.ncutrace.Interpolation;
 import java.util.List;
 import java.util.Random;
 
-import tw.edu.ncu.ce.nclab.ncutrace.TrackPoint;
+import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
 
 public interface InterpolationMethod {
 

@@ -1,4 +1,7 @@
 package tw.edu.ncu.ce.nclab.ncutrace;
+
+import tw.edu.ncu.ce.nclab.ncutrace.data.TWD97;
+
 /**
  * The modified code from http://sask989.blogspot.tw/2012/05/wgs84totwd97.html
  * 

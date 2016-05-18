@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import tw.edu.ncu.ce.nclab.ncutrace.NCUTrace;
-import tw.edu.ncu.ce.nclab.ncutrace.TrackPoint;
+import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
 
 /**
  * Original Interpolation used by Pin-Chun Chiu

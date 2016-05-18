@@ -11,6 +11,7 @@ import javax.swing.JFileChooser;
 
 import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.InterpolationMethod;
 import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.OriginalInterpolation;
+import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
 
 public class TrackPointInterpolation {
 	

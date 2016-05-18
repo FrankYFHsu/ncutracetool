@@ -1,4 +1,4 @@
-package tw.edu.ncu.ce.nclab.ncutrace;
+package tw.edu.ncu.ce.nclab.ncutrace.data;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 

@@ -1,4 +1,4 @@
-package tw.edu.ncu.ce.nclab.ncutrace;
+package tw.edu.ncu.ce.nclab.ncutrace.data;
 
 
 public class LonLat {
