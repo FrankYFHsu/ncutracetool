@@ -13,11 +13,10 @@ import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.InterpolationMethod;
 import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.OriginalInterpolation;
 import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
 
-public class TrackPointInterpolation {
+public class TrackPointInterpolation extends ArrangeMethod{
 	
 	Random generator = new Random(0);
-	private File sourceDirectory;
-	private File outPutDirectory;
+
 	private InterpolationMethod interpolationMethod;
 
 	public TrackPointInterpolation(File sourceDirectory) {
@@ -38,42 +37,13 @@ public class TrackPointInterpolation {
 		interpolationMethod.setRandomGenerator(generator);//Currently, this is no need
 	}
 
-	private void chooseSourceDirectory() {
-		JFileChooser fc = new JFileChooser();
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		int returnVal = fc.showOpenDialog(null);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			sourceDirectory = fc.getSelectedFile();
 
-		} else {
-			System.exit(0);
-		}
-	}
-
-	private void checkSourceDirectory() {
-		if (sourceDirectory == null) {
-			chooseSourceDirectory();
-		}
-		outPutDirectory = new File(sourceDirectory.getAbsolutePath() + "_full");
-		outPutDirectory.mkdirs();
-	}
 
 	public void startInterpolation() throws IOException {
 
-		checkSourceDirectory();
+		checkSourceDirectory("_full");
 
-		FilenameFilter trackFilter = new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				String lowercaseName = name.toLowerCase();
-				if (lowercaseName.matches("\\d+\\.txt")) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		};
-
-		String[] files = sourceDirectory.list(trackFilter);
+		String[] files = getNumericFileName(sourceDirectory);
 
 		for (String fileName : files) {
 			System.out.println(fileName);

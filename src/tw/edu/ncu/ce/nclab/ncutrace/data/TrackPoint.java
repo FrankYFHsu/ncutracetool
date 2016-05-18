@@ -15,10 +15,23 @@ public class TrackPoint implements Comparable<TrackPoint>{
 		this.elapsedTime=time;
 	}
 	
+	public TrackPoint(String trackPointInfo){
+		String[] infos = trackPointInfo.split(" ");
+		
+		this.x=Double.parseDouble(infos[0]);
+		this.y=Double.parseDouble(infos[1]);
+		this.elapsedTime=Integer.parseInt(infos[2]);
+	}
+	
 	public TrackPoint(){
 		x=0;
 		y=0;
 		elapsedTime=0;
+	}
+	
+	public TrackPoint addElapsedTime(int seconds){
+		
+		return new TrackPoint(x,y,elapsedTime+seconds);
 	}
 	
 	@Override
