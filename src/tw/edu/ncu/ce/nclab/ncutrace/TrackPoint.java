@@ -1,3 +1,4 @@
+package tw.edu.ncu.ce.nclab.ncutrace;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -13,6 +14,13 @@ public class TrackPoint implements Comparable<TrackPoint>{
 		this.y=y;
 		this.elapsedTime=time;
 	}
+	
+	public TrackPoint(){
+		x=0;
+		y=0;
+		elapsedTime=0;
+	}
+	
 	@Override
 	public String toString(){
 		NumberFormat nf = new DecimalFormat(".#");

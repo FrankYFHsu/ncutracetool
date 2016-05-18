@@ -1,3 +1,4 @@
+package tw.edu.ncu.ce.nclab.ncutrace;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
@@ -22,6 +23,7 @@ public class DataExtracter {
 
 	private String sourceDirectoriesPath;
 	private String outPutDirectoriesPath;
+	private File outPutDirectory;
 	private static final int NUMBER_OF_NO_USE_LINES_IN_CSVFILE = 4;
 	private static final int POSITION_OF_LAT_IN_EACHLINE = 2;
 	private static final int POSITION_OF_LON_IN_EACHLINE = 3;
@@ -148,8 +150,8 @@ public class DataExtracter {
 			System.out.println("\tFile " + trackList[trackFileNameIndex]
 					+ " done");
 		}
-		
-		//sort trackPoints by the elapsed time
+
+		// sort trackPoints by the elapsed time
 		Collections.sort(trackPoints);
 
 		for (TrackPoint p : trackPoints) {
@@ -184,7 +186,7 @@ public class DataExtracter {
 	}
 
 	public void timeCheck() throws FileNotFoundException {
-		File outPutDirectory = new File(outPutDirectoriesPath);
+		outPutDirectory = new File(outPutDirectoriesPath);
 
 		FilenameFilter trackFilter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
@@ -212,8 +214,8 @@ public class DataExtracter {
 				if (trackTime >= lastTime) {
 					lastTime = trackTime;
 				} else {
-					System.out
-							.println("Error in:" + fileName + " @ " + trackTime);
+					System.out.println("Error in:" + fileName + " @ "
+							+ trackTime);
 					break;
 				}
 			}
@@ -230,6 +232,10 @@ public class DataExtracter {
 		if (y < minY) {
 			minY = y;
 		}
+	}
+
+	public File getOutPutDirectory() {
+		return this.outPutDirectory;
 	}
 
 	/**

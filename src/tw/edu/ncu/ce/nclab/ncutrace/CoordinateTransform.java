@@ -1,3 +1,4 @@
+package tw.edu.ncu.ce.nclab.ncutrace;
 /**
  * The modified code from http://sask989.blogspot.tw/2012/05/wgs84totwd97.html
  * 
