@@ -1,13 +1,10 @@
 package tw.edu.ncu.ce.nclab.ncutrace;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-
-import javax.swing.JFileChooser;
 
 import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.InterpolationMethod;
 import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.OriginalInterpolation;

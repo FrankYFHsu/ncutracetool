@@ -18,12 +18,11 @@ import javax.swing.JFileChooser;
 
 import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
 
-//fulfillment
+
 public class TraceFulfillmentAndMerge extends ArrangeMethod {
 
-	// static int dayperiod = 28800;
-	private int startTime = 0;// 561600;//86400*7; 應是7~11=nodegogoDay8_11
-	private int endTime = 1209600;// 993600;//86400*11;
+	private int startTime = 0;// defalut
+	private int endTime = 86400*14;// default
 	private double MinX = Double.MAX_VALUE;
 	private double MinY = Double.MAX_VALUE;
 	private double MaxX = 0;
@@ -68,7 +67,7 @@ public class TraceFulfillmentAndMerge extends ArrangeMethod {
 					FillStartTime(point, pw);
 					firstinputflag = false;
 				}
-				pw.println(point.x + " " + point.y + " " + point.elapsedTime);
+				pw.println(point.toString());
 
 				checkBoundary(point);
 

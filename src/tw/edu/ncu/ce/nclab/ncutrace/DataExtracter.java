@@ -1,4 +1,5 @@
 package tw.edu.ncu.ce.nclab.ncutrace;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
@@ -22,57 +23,57 @@ import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
  * 把我的足跡節錄下來的Trace檔轉換成 "x y time"，分別是 "TWD97格式的座標(四捨五入至小數點第一位) 開始時間"
  * 並將檔案輸出到(原資料目錄)_output，並附上node對照表與座標最小值
  */
-public class DataExtracter {
+public class DataExtracter extends ArrangeMethod {
 
-	private String sourceDirectoriesPath;
-	private String outPutDirectoriesPath;
-	private File outPutDirectory;
 	private static final int NUMBER_OF_NO_USE_LINES_IN_CSVFILE = 4;
 	private static final int POSITION_OF_LAT_IN_EACHLINE = 2;
 	private static final int POSITION_OF_LON_IN_EACHLINE = 3;
 	private static final int POSITION_OF_TRACKTIME_IN_EACHLINE = 8;
-	private double minX;
-	private double minY;
-	private NumberFormat nf = new DecimalFormat(".#"); // 小數點第一位
 
 	private PrintWriter extractInfo;
 
 	public DataExtracter() {
-
-		sourceDirectoriesPath = "";
-		outPutDirectoriesPath = "";
-		minX = Double.POSITIVE_INFINITY;
-		minY = Double.POSITIVE_INFINITY;
+		// Nothing to do?
 	}
 
-	private void chooseSourceDirectory() {
-		JFileChooser fc = new JFileChooser();
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		int returnVal = fc.showOpenDialog(null);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			outPutDirectoriesPath = file.getAbsolutePath() + "_output"
-					+ File.separator;
-			File outPutDirectory = new File(outPutDirectoriesPath);
-			outPutDirectory.mkdirs();
+	public DataExtracter(File source) {
+		this.sourceDirectory = source;
+	}
 
-			sourceDirectoriesPath = file.getAbsolutePath() + File.separator;
-		} else {
-			System.exit(0);
+	public void startExtractData() {
+
+		checkSourceDirectory("_output");
+
+		try {
+			extractInfo = new PrintWriter(
+					this.outPutDirectory.getAbsolutePath() + File.separator
+							+ "extractInfo.txt");
+			extractDataForEachUser();
+			extractInfo.close();
+		} catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+
+			e.printStackTrace();
+		} catch (IOException e) {
+
+			e.printStackTrace();
 		}
+
 	}
 
 	public void extractDataForEachUser() throws NumberFormatException,
 			IOException {
 
 		// 獲得所有參加者的名字(資料夾name)，可能含系統的隱藏檔。
-		String userNameListInChinese[] = getFileNameList(sourceDirectoriesPath);
+		String userNameListInChinese[] = sourceDirectory.list();
 		// For each user
 		int validUserNameIndex = 0;
 		for (int usernameIndex = 0; usernameIndex < userNameListInChinese.length; usernameIndex++) {
 
-			File subDirectory = new File(sourceDirectoriesPath
-					+ userNameListInChinese[usernameIndex]);
+			File subDirectory = new File(this.sourceDirectory.getAbsolutePath()
+					+ File.separator + userNameListInChinese[usernameIndex]);
 			if (!subDirectory.isDirectory()) {
 				continue;
 			}
@@ -80,8 +81,8 @@ public class DataExtracter {
 					+ validUserNameIndex);
 			extractInfo.flush();
 
-			File outPutFile = new File(outPutDirectoriesPath
-					+ validUserNameIndex + ".txt");
+			File outPutFile = new File(this.outPutDirectory.getAbsolutePath()
+					+ File.separator + validUserNameIndex + ".txt");
 
 			System.out.println(validUserNameIndex + ":"
 					+ userNameListInChinese[usernameIndex]);
@@ -98,7 +99,7 @@ public class DataExtracter {
 	public void extractDataFromTrackFile(File subDirectory,
 			PrintWriter userOutPutFile) throws FileNotFoundException {
 
-		String trackList[] = getFileNameList(subDirectory.getAbsolutePath());// get裡面的檔案(csv檔)
+		String trackList[] = subDirectory.list();// get裡面的檔案(csv檔)
 
 		Scanner trackFileScanner;
 
@@ -146,7 +147,6 @@ public class DataExtracter {
 				double x = twd97Location.getX();
 				double y = twd97Location.getY();
 
-				checkMinValue(x, y);
 				trackPoints.add(new TrackPoint(x, y, elapseds));
 
 			}
@@ -163,46 +163,9 @@ public class DataExtracter {
 
 	}
 
-	public void startExtractData() {
-
-		chooseSourceDirectory();
-
-		try {
-			extractInfo = new PrintWriter(outPutDirectoriesPath
-					+ "extractInfo.txt");
-			extractDataForEachUser();
-			extractInfo.println("MinX=" + nf.format(minX));
-			extractInfo.println("MinY=" + nf.format(minY));
-			extractInfo.flush();
-			extractInfo.close();
-		} catch (FileNotFoundException e) {
-
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
-
-			e.printStackTrace();
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-
-	}
-
 	public void timeCheck() throws FileNotFoundException {
-		outPutDirectory = new File(outPutDirectoriesPath);
 
-		FilenameFilter trackFilter = new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				String lowercaseName = name.toLowerCase();
-				if (lowercaseName.matches("\\d+\\.txt")) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		};
-
-		String[] files = outPutDirectory.list(trackFilter);
+		String[] files = getNumericFileName(this.outPutDirectory);
 
 		for (String fileName : files) {
 
@@ -228,25 +191,8 @@ public class DataExtracter {
 
 	}
 
-	private void checkMinValue(double x, double y) {
-		if (x < minX) {
-			minX = x;
-		}
-		if (y < minY) {
-			minY = y;
-		}
-	}
-
 	public File getOutPutDirectory() {
 		return this.outPutDirectory;
-	}
-
-	/**
-	 * 輸入路徑,輸出當資料夾下的所有檔案列表
-	 */
-	public static String[] getFileNameList(String folderPath) {
-
-		return new File(folderPath).list();
 	}
 
 }

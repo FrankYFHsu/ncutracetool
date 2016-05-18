@@ -13,6 +13,7 @@ public abstract class ArrangeMethod {
 	protected void chooseSourceDirectory() {
 		JFileChooser fc = new JFileChooser();
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fc.setVisible(true);
 		int returnVal = fc.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			sourceDirectory = fc.getSelectedFile();
