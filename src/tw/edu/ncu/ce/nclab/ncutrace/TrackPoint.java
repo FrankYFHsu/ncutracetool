@@ -5,9 +5,9 @@ import java.text.NumberFormat;
 
 public class TrackPoint implements Comparable<TrackPoint>{
 	
-	double x;
-	double y;
-	int elapsedTime;
+	public double x;
+	public double y;
+	public int elapsedTime;
 	
 	public TrackPoint(double x, double y,int time){
 		this.x=x;

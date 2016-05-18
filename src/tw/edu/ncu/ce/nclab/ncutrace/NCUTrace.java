@@ -4,6 +4,8 @@ import java.text.ParseException;
 
 import org.joda.time.DateTime;
 
+import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.OriginalInterpolation;
+
 public class NCUTrace {
 
 	// 2014-12-15T12:00:00.000+08:00 Trace開始時間為12/15 中午12點(utc+8)
