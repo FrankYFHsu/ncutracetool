@@ -23,12 +23,24 @@ public abstract class ArrangeMethod {
 		}
 	}
 
+	
 	protected void checkSourceDirectory(String outputPostfix) {
 		if (sourceDirectory == null) {
 			chooseSourceDirectory();
 		}
 		outPutDirectory = new File(sourceDirectory.getAbsolutePath()
 				+ outputPostfix);
+		outPutDirectory.mkdirs();
+	}
+	
+	/**
+	 * 檢查資料來源的目錄，若未設定，就會跳出FileChooser
+	 */
+	protected void checkSourceDirectory() {
+		if (sourceDirectory == null) {
+			chooseSourceDirectory();
+		}
+		outPutDirectory = new File(sourceDirectory.getAbsolutePath());
 		outPutDirectory.mkdirs();
 	}
 
