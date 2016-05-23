@@ -56,8 +56,8 @@ public class TrackPointInterpolation extends ArrangeMethod{
 			TrackPoint lastdata = new TrackPoint();
 
 			while (sc.hasNextLine()) {
-				String str = sc.nextLine();
-				String[] linesplit = str.split(" ");
+				String trackPointInfo = sc.nextLine();
+				String[] linesplit = trackPointInfo.split(" ");
 				double x = Double.parseDouble(linesplit[0]);
 				double y = Double.parseDouble(linesplit[1]);
 				int time = Integer.parseInt(linesplit[2]);
@@ -66,14 +66,14 @@ public class TrackPointInterpolation extends ArrangeMethod{
 				}
 
 				if (firstinput) {// 檢測是否為第一筆有效資料(time>=0的第一筆)
-					lastdata = new TrackPoint(x, y, time);
+					lastdata = new TrackPoint(trackPointInfo,TrackPoint.LocationType.TWD97);
 					firstinput = false;
 					pw.println(lastdata.toString());
 					continue;
 				}
 				if (time - lastdata.elapsedTime > 1) {// 檢測兩點資料之間的連續性 不齊則補足
 				
-					List<TrackPoint> list = interpolationMethod.getInterpolationMethod(lastdata, new TrackPoint(x,y,time));
+					List<TrackPoint> list = interpolationMethod.getInterpolationMethod(lastdata, new TrackPoint(trackPointInfo,TrackPoint.LocationType.TWD97));
 					for(TrackPoint p:list){
 						pw.println(p.toString());
 					}
@@ -81,7 +81,7 @@ public class TrackPointInterpolation extends ArrangeMethod{
 				}
 				pw.println(x + " " + y + " " + time);// 寫入並儲存上一筆data
 				pw.flush();
-				lastdata = new TrackPoint(x, y, time);
+				lastdata = new TrackPoint(trackPointInfo,TrackPoint.LocationType.TWD97);
 
 			}
 

@@ -1,9 +1,11 @@
 package tw.edu.ncu.ce.nclab.ncutrace.Interpolation;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import tw.edu.ncu.ce.nclab.ncutrace.NCUTrace;
+import tw.edu.ncu.ce.nclab.ncutrace.data.TWD97;
 import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
 
 /**
@@ -32,8 +34,8 @@ public class OriginalInterpolation implements InterpolationMethod {
 		List<TrackPoint> interpolatedTrackPoints = new ArrayList<TrackPoint>();
 
 		int elapsed = currentPoint.elapsedTime - lastTrackPoint.elapsedTime;
-		double dis = distance(currentPoint.x, currentPoint.y, lastTrackPoint.x,
-				lastTrackPoint.y);
+		double dis = distance(currentPoint.getX(), currentPoint.getY(),
+				lastTrackPoint.getX(), lastTrackPoint.getY());
 
 		int timeslot = lastTrackPoint.elapsedTime + 1;
 
@@ -44,23 +46,27 @@ public class OriginalInterpolation implements InterpolationMethod {
 
 			int wait = (int) Math.round(elapsed - (dis / randomspeed));
 			for (int i = 1; i < wait; i++) {
-				interpolatedTrackPoints.add(new TrackPoint(lastTrackPoint.x,
-						lastTrackPoint.y, (i + lastTrackPoint.elapsedTime)));
+				interpolatedTrackPoints
+						.add(new TrackPoint(lastTrackPoint.getTWD97_location(),
+								(i + lastTrackPoint.elapsedTime)));
 				timeslot++;
 			}
 
 		}
 
-		double xdelta = (currentPoint.x - lastTrackPoint.x)
+		double xdelta = (currentPoint.getX() - lastTrackPoint.getX())
 				/ (currentPoint.elapsedTime - timeslot + 1);
-		double ydelta = (currentPoint.y - lastTrackPoint.y)
+		double ydelta = (currentPoint.getY() - lastTrackPoint.getY())
 				/ (currentPoint.elapsedTime - timeslot + 1);
 
 		for (; timeslot < currentPoint.elapsedTime; timeslot++) {
-			lastTrackPoint.x = lastTrackPoint.x + xdelta;
-			lastTrackPoint.y = lastTrackPoint.y + ydelta;
-			interpolatedTrackPoints.add(new TrackPoint(lastTrackPoint.x,
-					lastTrackPoint.y, timeslot));
+
+			TWD97 newTrackPoint = new TWD97(lastTrackPoint.getX() + xdelta,
+					lastTrackPoint.getY() + ydelta);
+
+			lastTrackPoint = new TrackPoint(newTrackPoint, timeslot);
+
+			interpolatedTrackPoints.add(lastTrackPoint);
 
 		}
 

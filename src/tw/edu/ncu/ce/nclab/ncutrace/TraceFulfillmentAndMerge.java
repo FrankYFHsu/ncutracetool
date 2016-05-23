@@ -31,6 +31,10 @@ public class TraceFulfillmentAndMerge extends ArrangeMethod {
 	public TraceFulfillmentAndMerge(File sourceDirectory) {
 		this.sourceDirectory = sourceDirectory;
 	}
+	
+	public TraceFulfillmentAndMerge(){
+		//Do nothing?
+	}
 
 	public void setStartingTime(int time) {
 		startTime = time;
@@ -58,7 +62,7 @@ public class TraceFulfillmentAndMerge extends ArrangeMethod {
 			TrackPoint point = new TrackPoint();
 			while (sc.hasNextLine()) {
 				String trackPointInfo = sc.nextLine();
-				point = new TrackPoint(trackPointInfo);
+				point = new TrackPoint(trackPointInfo,TrackPoint.LocationType.TWD97);
 
 				if (point.elapsedTime < startTime) {
 					continue;
@@ -145,17 +149,17 @@ public class TraceFulfillmentAndMerge extends ArrangeMethod {
 	}
 
 	private void checkBoundary(TrackPoint point) {
-		if (MinX > point.x) {
-			MinX = point.x;
+		if (MinX > point.getX()) {
+			MinX = point.getX();
 		}
-		if (MinY > point.y) {
-			MinY = point.y;
+		if (MinY > point.getY()) {
+			MinY = point.getY();
 		}
-		if (MaxX < point.x) {
-			MaxX = point.x;
+		if (MaxX < point.getX()) {
+			MaxX = point.getX();
 		}
-		if (MaxY < point.y) {
-			MaxY = point.y;
+		if (MaxY < point.getY()) {
+			MaxY = point.getY();
 		}
 	}
 
@@ -167,7 +171,7 @@ public class TraceFulfillmentAndMerge extends ArrangeMethod {
 	public void FillStartTime(TrackPoint p, PrintWriter bw) throws IOException {
 		int timestamp = startTime;
 		while (timestamp < p.elapsedTime) {
-			bw.println(p.x + " " + p.y + " " + timestamp);
+			bw.println(p.getX() + " " + p.getY() + " " + timestamp);
 			timestamp++;
 		}
 	}
@@ -175,7 +179,7 @@ public class TraceFulfillmentAndMerge extends ArrangeMethod {
 	public void FillEndTime(TrackPoint p, PrintWriter bw) throws IOException {
 		int timestamp = p.elapsedTime;
 		while (timestamp <= endTime) {
-			bw.println(p.x + " " + p.y + " " + timestamp);
+			bw.println(p.getX() + " " + p.getY() + " " + timestamp);
 			timestamp++;
 		}
 	}

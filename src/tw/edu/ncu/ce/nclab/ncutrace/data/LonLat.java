@@ -3,10 +3,10 @@ package tw.edu.ncu.ce.nclab.ncutrace.data;
 
 public class LonLat {
 	
-	private double mLatitude;
-	private double mLongitude;
+	private double mLatitude;//經度
+	private double mLongitude;//緯度
 	
-	public LonLat(double lat, double lon){
+	public LonLat(double lon, double lat){
 		mLatitude=lat;
 		mLongitude=lon;
 	}

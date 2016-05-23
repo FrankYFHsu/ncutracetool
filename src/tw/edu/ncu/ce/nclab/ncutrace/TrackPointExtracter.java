@@ -16,27 +16,30 @@ import javax.swing.JFileChooser;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
+import tw.edu.ncu.ce.nclab.ncutrace.data.LonLat;
 import tw.edu.ncu.ce.nclab.ncutrace.data.TWD97;
 import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
 
 /**
  * 把我的足跡節錄下來的Trace檔轉換成 "x y time"，分別是 "TWD97格式的座標(四捨五入至小數點第一位) 開始時間"
- * 並將檔案輸出到(原資料目錄)_output，並附上node對照表與座標最小值
+ * 並將檔案輸出到(原資料目錄)_output，並附上node對照表
  */
-public class DataExtracter extends ArrangeMethod {
+public class TrackPointExtracter extends ArrangeMethod {
 
 	private static final int NUMBER_OF_NO_USE_LINES_IN_CSVFILE = 4;
 	private static final int POSITION_OF_LAT_IN_EACHLINE = 2;
 	private static final int POSITION_OF_LON_IN_EACHLINE = 3;
 	private static final int POSITION_OF_TRACKTIME_IN_EACHLINE = 8;
 
+	private boolean createLonLatInfo = false;
+
 	private PrintWriter extractInfo;
 
-	public DataExtracter() {
+	public TrackPointExtracter() {
 		// Nothing to do?
 	}
 
-	public DataExtracter(File source) {
+	public TrackPointExtracter(File source) {
 		this.sourceDirectory = source;
 	}
 
@@ -81,24 +84,24 @@ public class DataExtracter extends ArrangeMethod {
 					+ validUserNameIndex);
 			extractInfo.flush();
 
-			File outPutFile = new File(this.outPutDirectory.getAbsolutePath()
-					+ File.separator + validUserNameIndex + ".txt");
-
 			System.out.println(validUserNameIndex + ":"
 					+ userNameListInChinese[usernameIndex]);
 
-			PrintWriter userOutPutFile = new PrintWriter(outPutFile);
-
-			extractDataFromTrackFile(subDirectory, userOutPutFile);
-			userOutPutFile.close();
+			extractDataFromTrackFile(subDirectory, validUserNameIndex);
+			
 			validUserNameIndex++;
 
 		}
 	}
 
 	public void extractDataFromTrackFile(File subDirectory,
-			PrintWriter userOutPutFile) throws FileNotFoundException {
+			int validUserNameIndex) throws FileNotFoundException {
 
+		File outPutFile = new File(this.outPutDirectory.getAbsolutePath()
+				+ File.separator + validUserNameIndex + ".txt");
+		
+		PrintWriter userOutPutFile = new PrintWriter(outPutFile);
+		
 		String trackList[] = subDirectory.list();// get裡面的檔案(csv檔)
 
 		Scanner trackFileScanner;
@@ -141,13 +144,7 @@ public class DataExtracter extends ArrangeMethod {
 						NCUTrace.STARTING_TIME_OF_NCUTRACE, timeOfTracePoint)
 						.getSeconds();
 
-				TWD97 twd97Location = CoordinateTransform.convertWGS84toTWD97(
-						lon, lat);
-
-				double x = twd97Location.getX();
-				double y = twd97Location.getY();
-
-				trackPoints.add(new TrackPoint(x, y, elapseds));
+				trackPoints.add(new TrackPoint(new LonLat(lon, lat), elapseds));
 
 			}
 			System.out.println("\tFile " + trackList[trackFileNameIndex]
@@ -158,8 +155,22 @@ public class DataExtracter extends ArrangeMethod {
 		Collections.sort(trackPoints);
 
 		for (TrackPoint p : trackPoints) {
-			userOutPutFile.println(p.toString());
+			userOutPutFile.println(p.getLocationInfoWithTWD97());
 		}
+		userOutPutFile.close();
+		
+		if(createLonLatInfo){
+			
+			File outPutFile_LonLat = new File(this.outPutDirectory.getAbsolutePath()
+					+ File.separator + "lonlat_"+validUserNameIndex + ".txt");
+			PrintWriter userOutPutFile_LonLat = new PrintWriter(outPutFile_LonLat);
+			for (TrackPoint p : trackPoints) {
+				userOutPutFile_LonLat.println(p.getLocationInfoWithLonLat());
+			}
+			userOutPutFile_LonLat.flush();
+			userOutPutFile_LonLat.close();
+		}
+		
 
 	}
 
@@ -191,8 +202,12 @@ public class DataExtracter extends ArrangeMethod {
 
 	}
 
-	public File getOutPutDirectory() {
-		return this.outPutDirectory;
+	public boolean isCreateLonLatInfo() {
+		return createLonLatInfo;
+	}
+
+	public void setCreateLonLatInfo(boolean createLonLatInfo) {
+		this.createLonLatInfo = createLonLatInfo;
 	}
 
 }

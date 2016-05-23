@@ -1,5 +1,6 @@
 package tw.edu.ncu.ce.nclab.ncutrace;
 
+import tw.edu.ncu.ce.nclab.ncutrace.data.LonLat;
 import tw.edu.ncu.ce.nclab.ncutrace.data.TWD97;
 
 /**
@@ -73,9 +74,12 @@ public class CoordinateTransform {
 	 *            緯度(角度)
 	 * @return TWD97坐標"x,y"
 	 */
-	public static TWD97 convertWGS84toTWD97(double lon_degree,
-			double lat_degree) {
+	public static TWD97 convertWGS84toTWD97(double lon_degree, double lat_degree) {
 		return WGS84toTWD97Calculation(lon_degree, lat_degree);
+	}
+	
+	public static TWD97 convertWGS84toTWD97(LonLat lonlatInfo) {
+		return WGS84toTWD97Calculation(lonlatInfo.getLongitude(), lonlatInfo.getLatitude());
 	}
 
 	/**
@@ -95,18 +99,24 @@ public class CoordinateTransform {
 
 		String lonlat = "";
 
-		lonlat = TWD97toWGS84Calculation(XValue, YValue);
+		lonlat = TWD97toWGS84Calculation(XValue, YValue).toString();
 
 		if (type == DEGREE_TYPE) {
 			return lonlat;
 		} else if (type == DMS_TYPE) {
 			return convertDegreetoDMS(lonlat);
 
-		}else{
-			//Default, using degree
+		} else {
+			// Default, using degree
 			return lonlat;
 		}
-		
+
+	}
+
+	public static LonLat convertTWD97toWGS84(TWD97 twd97info) {
+
+		return TWD97toWGS84Calculation(twd97info.getX(), twd97info.getY());
+
 	}
 
 	private static String convertDegreetoDMS(String degree) {
@@ -163,10 +173,10 @@ public class CoordinateTransform {
 								+ Math.pow(T, 2) + 600 * C - 330 * e2)
 								* Math.pow(A, 6) / 720));
 
-		return new TWD97(x,y);
+		return new TWD97(x, y);
 	}
 
-	private static String TWD97toWGS84Calculation(double x, double y) {
+	private static LonLat TWD97toWGS84Calculation(double x, double y) {
 		x -= dx;
 		y -= dy;
 
@@ -216,6 +226,6 @@ public class CoordinateTransform {
 		double lat_degree = (lat * 180) / Math.PI;
 		double lon_degree = (lon * 180) / Math.PI;
 
-		return lon_degree + "," + lat_degree;
+		return new LonLat(lon_degree, lat_degree);
 	}
 }

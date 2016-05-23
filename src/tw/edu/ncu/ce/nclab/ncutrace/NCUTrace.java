@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Seconds;
 
+import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.HsuInterpolation;
 import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.OriginalInterpolation;
 
 public class NCUTrace {
@@ -19,35 +20,37 @@ public class NCUTrace {
 	public final static double MINWALKINGSPEED = 3.75 * (10 / 36.0);
 
 	public static void main(String[] args) throws IOException, ParseException {
-		// DataExtracter step1 = new DataExtracter();
+		// TrackPointExtracter step1 = new TrackPointExtracter();
+		// step1.setCreateLonLatInfo(true);
 		// step1.startExtractData();
-		// step1.timeCheck(); optional
+		// step1.timeCheck();
 
 		// 第一步後，可以進行篩選
 
 		// TrackPointInterpolation step2 = new
 		// TrackPointInterpolation(step1.getOutPutDirectory());
-		TrackPointInterpolation step2 = new TrackPointInterpolation();
-		// step2.setInterpolationMethod(new HsuInterpolation());
-		step2.setInterpolationMethod(new OriginalInterpolation());
-		step2.startInterpolation();
+		//TrackPointInterpolation step2 = new TrackPointInterpolation();
+		//step2.setInterpolationMethod(new HsuInterpolation());
+		//step2.setInterpolationMethod(new OriginalInterpolation());
+		//step2.startInterpolation();
 
 		DateTime startTime = new DateTime(2014, 12, 15, 12, 0, 0, 0);
 		System.out.println(startTime);
 		DateTime endTime = startTime.plusDays(1);
 		System.out.println(endTime);
-		TraceFulfillmentAndMerge step3 = new TraceFulfillmentAndMerge(
-				step2.getOutPutDirectory());
-		step3.setStartingTime(getElapsedTimeFromStartingTime(startTime));
-		step3.setEndingTime(getElapsedTimeFromStartingTime(endTime));
+		 //TraceFulfillmentAndMerge step3 = new TraceFulfillmentAndMerge(
+		 //step2.getOutPutDirectory());
+		 TraceFulfillmentAndMerge step3 = new TraceFulfillmentAndMerge();
+	     step3.setStartingTime(getElapsedTimeFromStartingTime(startTime));
+		 step3.setEndingTime(getElapsedTimeFromStartingTime(endTime));
 
-		step3.startTraceFulfillment();
-		step3.startMerge();
+		 step3.startTraceFulfillment();
+		 step3.startMerge();
 
 	}
 
 	public static void generateDefaultTrace() throws IOException {
-		DataExtracter step1 = new DataExtracter();
+		TrackPointExtracter step1 = new TrackPointExtracter();
 		step1.startExtractData();
 
 		TrackPointInterpolation step2 = new TrackPointInterpolation(
