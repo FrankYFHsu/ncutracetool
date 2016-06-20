@@ -19,7 +19,7 @@ import javax.swing.JFileChooser;
 import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
 
 
-public class TraceFulfillmentAndMerge extends ArrangeMethod {
+public class TraceFulfillmentAndMerge extends TraceArrangement {
 
 	private int startTime = 0;// defalut
 	private int endTime = 86400*14;// default

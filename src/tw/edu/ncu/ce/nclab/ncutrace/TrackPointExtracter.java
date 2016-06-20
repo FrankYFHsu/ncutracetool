@@ -24,7 +24,7 @@ import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
  * 把我的足跡節錄下來的Trace檔轉換成 "x y time"，分別是 "TWD97格式的座標(四捨五入至小數點第一位) 開始時間"
  * 並將檔案輸出到(原資料目錄)_output，並附上node對照表
  */
-public class TrackPointExtracter extends ArrangeMethod {
+public class TrackPointExtracter extends TraceArrangement {
 
 	private static final int NUMBER_OF_NO_USE_LINES_IN_CSVFILE = 4;
 	private static final int POSITION_OF_LAT_IN_EACHLINE = 2;

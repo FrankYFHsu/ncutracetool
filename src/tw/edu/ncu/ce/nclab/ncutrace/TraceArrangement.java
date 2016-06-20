@@ -5,7 +5,7 @@ import java.io.FilenameFilter;
 
 import javax.swing.JFileChooser;
 
-public abstract class ArrangeMethod {
+public abstract class TraceArrangement {
 
 	protected File sourceDirectory;
 	protected File outPutDirectory;
@@ -48,6 +48,11 @@ public abstract class ArrangeMethod {
 		return this.outPutDirectory;
 	}
 
+	/**
+	 * 
+	 * @param directory
+	 * @return
+	 */
 	protected String[] getNumericFileName(File directory) {
 		FilenameFilter trackFilter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {

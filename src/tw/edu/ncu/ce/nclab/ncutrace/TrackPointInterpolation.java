@@ -10,7 +10,7 @@ import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.InterpolationMethod;
 import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.OriginalInterpolation;
 import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
 
-public class TrackPointInterpolation extends ArrangeMethod{
+public class TrackPointInterpolation extends TraceArrangement{
 	
 	Random generator = new Random(0);
 
