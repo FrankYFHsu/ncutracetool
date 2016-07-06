@@ -18,7 +18,7 @@ public class TWD97 {
 	
 	@Override
 	public String toString(){
-		return mY+","+mX;
+		return mX+","+mY;
 	}
 
 }
