@@ -9,6 +9,7 @@ import org.joda.time.Seconds;
 
 import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.HsuInterpolation;
 import tw.edu.ncu.ce.nclab.ncutrace.Interpolation.OriginalInterpolation;
+import tw.edu.ncu.ce.nclab.ncutrace.data.LonLat;
 
 public class NCUTrace {
 
@@ -20,32 +21,35 @@ public class NCUTrace {
 	public final static double MINWALKINGSPEED = 3.75 * (10 / 36.0);
 
 	public static void main(String[] args) throws IOException, ParseException {
-		// TrackPointExtracter step1 = new TrackPointExtracter();
-		// step1.setCreateLonLatInfo(true);
-		// step1.startExtractData();
-		// step1.timeCheck();
+		TrackPointExtracter step1 = new TrackPointExtracter();
+		step1.setCreateLonLatInfo(false);
+		step1.startExtractData();
+		step1.timeCheck();
+		//LonLat lb = new LonLat(121.185149,24.962759);
+		//LonLat rt = new LonLat(121.197208,24.972692);
+		//step1.eventsPerDay(rt,lb);
 
 		// 第一步後，可以進行篩選
 
-		// TrackPointInterpolation step2 = new
-		// TrackPointInterpolation(step1.getOutPutDirectory());
-		//TrackPointInterpolation step2 = new TrackPointInterpolation();
-		//step2.setInterpolationMethod(new HsuInterpolation());
-		//step2.setInterpolationMethod(new OriginalInterpolation());
-		//step2.startInterpolation();
+		TrackPointInterpolation step2 = new TrackPointInterpolation(
+				step1.getOutPutDirectory());
+		// TrackPointInterpolation step2 = new TrackPointInterpolation();
+		step2.setInterpolationMethod(new HsuInterpolation());
+		// step2.setInterpolationMethod(new OriginalInterpolation());
+		step2.startInterpolation();
 
 		DateTime startTime = new DateTime(2014, 12, 15, 12, 0, 0, 0);
 		System.out.println(startTime);
-		DateTime endTime = startTime.plusDays(1);
+		DateTime endTime = startTime.plusDays(9).plusHours(12);
 		System.out.println(endTime);
-		 //TraceFulfillmentAndMerge step3 = new TraceFulfillmentAndMerge(
-		 //step2.getOutPutDirectory());
-		 TraceFulfillmentAndMerge step3 = new TraceFulfillmentAndMerge();
-	     step3.setStartingTime(getElapsedTimeFromStartingTime(startTime));
-		 step3.setEndingTime(getElapsedTimeFromStartingTime(endTime));
+		TraceFulfillmentAndMerge step3 = new TraceFulfillmentAndMerge(
+				step2.getOutPutDirectory());
+		// TraceFulfillmentAndMerge step3 = new TraceFulfillmentAndMerge();
+		step3.setStartingTime(getElapsedTimeFromStartingTime(startTime));
+		step3.setEndingTime(getElapsedTimeFromStartingTime(endTime));
 
-		 step3.startTraceFulfillment();
-		 step3.startMerge();
+		step3.startTraceFulfillment();
+		step3.startMerge();
 
 	}
 
