@@ -88,7 +88,7 @@ public class TrackPointExtracter extends TraceArrangement {
 					+ userNameListInChinese[usernameIndex]);
 
 			extractDataFromTrackFile(subDirectory, validUserNameIndex);
-			
+
 			validUserNameIndex++;
 
 		}
@@ -99,9 +99,9 @@ public class TrackPointExtracter extends TraceArrangement {
 
 		File outPutFile = new File(this.outPutDirectory.getAbsolutePath()
 				+ File.separator + validUserNameIndex + ".txt");
-		
+
 		PrintWriter userOutPutFile = new PrintWriter(outPutFile);
-		
+
 		String trackList[] = subDirectory.list();// get裡面的檔案(csv檔)
 
 		Scanner trackFileScanner;
@@ -158,19 +158,20 @@ public class TrackPointExtracter extends TraceArrangement {
 			userOutPutFile.println(p.getLocationInfoWithTWD97());
 		}
 		userOutPutFile.close();
-		
-		if(createLonLatInfo){
-			
-			File outPutFile_LonLat = new File(this.outPutDirectory.getAbsolutePath()
-					+ File.separator + "lonlat_"+validUserNameIndex + ".txt");
-			PrintWriter userOutPutFile_LonLat = new PrintWriter(outPutFile_LonLat);
+
+		if (createLonLatInfo) {
+
+			File outPutFile_LonLat = new File(
+					this.outPutDirectory.getAbsolutePath() + File.separator
+							+ "lonlat_" + validUserNameIndex + ".txt");
+			PrintWriter userOutPutFile_LonLat = new PrintWriter(
+					outPutFile_LonLat);
 			for (TrackPoint p : trackPoints) {
 				userOutPutFile_LonLat.println(p.getLocationInfoWithLonLat());
 			}
 			userOutPutFile_LonLat.flush();
 			userOutPutFile_LonLat.close();
 		}
-		
 
 	}
 
@@ -197,6 +198,94 @@ public class TrackPointExtracter extends TraceArrangement {
 				}
 			}
 			sc.close();
+
+		}
+
+	}
+
+	public void eventsPerDay() throws FileNotFoundException {
+
+		String[] files = getNumericFileName(this.outPutDirectory);
+
+		for (String fileName : files) {
+
+			Scanner sc = new Scanner(new File(outPutDirectory.getAbsolutePath()
+					+ File.separator + fileName));
+			int[] events = new int[30];
+
+			String st;
+
+			while (sc.hasNextLine()) {
+				st = sc.nextLine();
+				String[] info = st.split(" ");
+				double trackTime = Double.parseDouble(info[2]) + 43200;
+
+				if (trackTime > 0) {
+					int index = (int) (trackTime / 86400);
+					events[index]++;
+
+				} else {
+					continue;
+				}
+
+			}
+			sc.close();
+			System.out.print(fileName);
+			for (int i : events) {
+				System.out.print("," + i);
+			}
+			System.out.println();
+
+		}
+
+	}
+
+	public void eventsPerDay(LonLat rt, LonLat lb) throws FileNotFoundException {
+
+		TWD97 RT = CoordinateTransform.convertWGS84toTWD97(rt);
+		TWD97 LB = CoordinateTransform.convertWGS84toTWD97(lb);
+		System.out.println("lb=" + LB);
+		System.out.println("rt=" + RT);
+
+		String[] files = getNumericFileName(this.outPutDirectory);
+
+		for (String fileName : files) {
+
+			Scanner sc = new Scanner(new File(outPutDirectory.getAbsolutePath()
+					+ File.separator + fileName));
+			int[] events = new int[30];
+
+			String st;
+
+			while (sc.hasNextLine()) {
+				st = sc.nextLine();
+				String[] info = st.split(" ");
+				double trackTime = Double.parseDouble(info[2]) + 43200;
+
+				if (trackTime > 0) {
+					int index = (int) (trackTime / 86400);
+
+					double x = Double.parseDouble(info[0]);
+					double y = Double.parseDouble(info[1]);
+
+					if (x >= LB.getX() && x <= RT.getX()) {
+
+						if (y >= LB.getY() && y <= RT.getY()) {
+							events[index]++;
+						}
+					}
+
+				} else {
+					continue;
+				}
+
+			}
+			sc.close();
+			System.out.print(fileName);
+			for (int i : events) {
+				System.out.print("," + i);
+			}
+			System.out.println();
 
 		}
 
