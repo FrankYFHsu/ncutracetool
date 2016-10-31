@@ -7,10 +7,10 @@ import javax.swing.JFileChooser;
 
 public abstract class TraceArrangement {
 
-	protected File sourceDirectory;
-	protected File outPutDirectory;
+	public File sourceDirectory;
+	public File outPutDirectory;
 
-	protected void chooseSourceDirectory() {
+	public void chooseSourceDirectory() {
 		JFileChooser fc = new JFileChooser();
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fc.setVisible(true);
@@ -24,7 +24,7 @@ public abstract class TraceArrangement {
 	}
 
 	
-	protected void checkSourceDirectory(String outputPostfix) {
+	public void checkSourceDirectory(String outputPostfix) {
 		if (sourceDirectory == null) {
 			chooseSourceDirectory();
 		}
@@ -44,7 +44,7 @@ public abstract class TraceArrangement {
 		outPutDirectory.mkdirs();
 	}
 
-	protected File getOutPutDirectory() {
+	public File getOutPutDirectory() {
 		return this.outPutDirectory;
 	}
 
@@ -53,7 +53,7 @@ public abstract class TraceArrangement {
 	 * @param directory
 	 * @return
 	 */
-	protected String[] getNumericFileName(File directory) {
+	public String[] getNumericFileName(File directory) {
 		FilenameFilter trackFilter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
 				String lowercaseName = name.toLowerCase();

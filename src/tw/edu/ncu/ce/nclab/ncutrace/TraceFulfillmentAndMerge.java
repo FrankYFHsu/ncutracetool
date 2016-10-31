@@ -16,24 +16,33 @@ import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 
+import tw.edu.ncu.ce.nclab.ncutrace.data.TWD97;
 import tw.edu.ncu.ce.nclab.ncutrace.data.TrackPoint;
-
 
 public class TraceFulfillmentAndMerge extends TraceArrangement {
 
 	private int startTime = 0;// defalut
-	private int endTime = 86400*14;// default
+	private int endTime = 86400 * 14;// default
 	private double MinX = Double.MAX_VALUE;
 	private double MinY = Double.MAX_VALUE;
 	private double MaxX = 0;
 	private double MaxY = 0;
 
-	public TraceFulfillmentAndMerge(File sourceDirectory) {
+	private TrackPoint minXPoint = new TrackPoint(new TWD97(Double.MAX_VALUE,0),0);
+	private TrackPoint minYPoint = new TrackPoint(new TWD97(0,Double.MAX_VALUE),0);
+	private TrackPoint maxXPoint = new TrackPoint(new TWD97(0,0),0);
+	private TrackPoint maxYPoint = new TrackPoint(new TWD97(0,0),0);
+	
+	String tracePrefix;
+
+	public TraceFulfillmentAndMerge(String name,File sourceDirectory) {
+		tracePrefix = name;
 		this.sourceDirectory = sourceDirectory;
 	}
-	
-	public TraceFulfillmentAndMerge(){
-		//Do nothing?
+
+	public TraceFulfillmentAndMerge(String name) {
+		tracePrefix = name;
+		// Do nothing?
 	}
 
 	public void setStartingTime(int time) {
@@ -62,7 +71,8 @@ public class TraceFulfillmentAndMerge extends TraceArrangement {
 			TrackPoint point = new TrackPoint();
 			while (sc.hasNextLine()) {
 				String trackPointInfo = sc.nextLine();
-				point = new TrackPoint(trackPointInfo,TrackPoint.LocationType.TWD97);
+				point = new TrackPoint(trackPointInfo,
+						TrackPoint.LocationType.TWD97);
 
 				if (point.elapsedTime < startTime) {
 					continue;
@@ -104,7 +114,7 @@ public class TraceFulfillmentAndMerge extends TraceArrangement {
 		BufferedReader[] br2 = new BufferedReader[files.length];
 		BufferedWriter Rawtrace = new BufferedWriter(new FileWriter(
 				outPutDirectory.getAbsolutePath() + File.separator
-						+ "NCUtrace_" + startTime + "_" + endTime + ".txt"));
+						+ tracePrefix+"trace_" + startTime + "_" + endTime + ".txt"));
 
 		String[] linesplit;
 
@@ -124,7 +134,13 @@ public class TraceFulfillmentAndMerge extends TraceArrangement {
 				+ " MinY=" + MinY);
 		System.out.println("X=" + Math.ceil(MaxX - MinX) + " Y="
 				+ Math.ceil(MaxY - MinY));
-
+		/*
+		System.out.println("@NCU area");
+		System.out.println("MinXPoint = " + minXPoint);
+		System.out.println("MinYPoint = " + minYPoint);
+		System.out.println("MaxXPoint = " + maxXPoint);
+		System.out.println("MaxYPoint = " + maxYPoint);
+		 */
 		NumberFormat nf = new DecimalFormat(".#");
 		Rawtrace.write("0 " + (endTime - startTime) + " 0 "
 				+ (Math.ceil(MaxX - MinX) + 100) + " 0 "
@@ -148,18 +164,51 @@ public class TraceFulfillmentAndMerge extends TraceArrangement {
 
 	}
 
+	private void checkLocateInNCU(TrackPoint point) {
+		double x = point.getX();
+
+		double y = point.getY();
+
+		if (270444 >= x && x >= 268444) {
+
+			if (2763238 >= y && y >= 2761238) {
+
+				if (minXPoint.getX() > point.getX()) {
+					minXPoint = point;
+				}
+				if (minYPoint.getY() > point.getY()) {
+					minYPoint = point;
+				}
+				if (maxXPoint.getX() < point.getX()) {
+					maxXPoint = point;
+				}
+				if (maxYPoint.getY() < point.getY()) {
+					maxYPoint = point;
+				}
+
+			}
+
+		}
+
+	}
+
 	private void checkBoundary(TrackPoint point) {
+		checkLocateInNCU(point);
 		if (MinX > point.getX()) {
 			MinX = point.getX();
+
 		}
 		if (MinY > point.getY()) {
 			MinY = point.getY();
+
 		}
 		if (MaxX < point.getX()) {
 			MaxX = point.getX();
+
 		}
 		if (MaxY < point.getY()) {
 			MaxY = point.getY();
+
 		}
 	}
 
